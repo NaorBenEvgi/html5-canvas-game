@@ -108,8 +108,20 @@ function animate(){
     projectiles.forEach((projectile) => {
         projectile.update()
     })
-    enemies.forEach((enemy) => {
+    enemies.forEach((enemy, enemyIndex) => {
+        //For removing enemy object, use forEach automatic indexing by adding a second argument 'index'
         enemy.update()
+        //check if the projectile touched an enemy - for each enemy within the loop we want to test the distance between each projectile
+        projectiles.forEach((projectile, projectileIndex) => {
+            const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y) //distance between 2 points
+            if (dist - enemy.radius -projectile.radius < 1){
+                //objects touch
+                setTimeout(()=>{
+                    enemies.splice(enemyIndex,1) //clear the enemy
+                    projectiles.splice(projectileIndex, 1) //clear the projectile
+                },0)
+            }
+        })
     })
 }
 
