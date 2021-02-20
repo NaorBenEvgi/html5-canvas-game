@@ -101,8 +101,9 @@ function spawnEnemies(){
     }, 1000)
 }
 
+let animationId
 function animate(){
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate) //returns what frame are you currently on
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clear html5 canvas
     player.draw()
     projectiles.forEach((projectile) => {
@@ -111,10 +112,15 @@ function animate(){
     enemies.forEach((enemy, enemyIndex) => {
         //For removing enemy object, use forEach automatic indexing by adding a second argument 'index'
         enemy.update()
+        //enemy touch player
+        const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y) //compute distance between enemy and player
+        if (dist - enemy.radius - player.radius < 1){
+            cancelAnimationFrame(animationId)
+        }
         //check if the projectile touched an enemy - for each enemy within the loop we want to test the distance between each projectile
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y) //distance between 2 points
-            if (dist - enemy.radius -projectile.radius < 1){
+            if (dist - enemy.radius - projectile.radius < 1){
                 //objects touch
                 setTimeout(()=>{
                     enemies.splice(enemyIndex,1) //clear the enemy
