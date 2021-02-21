@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-const scoreElement= document.querySelector('#score')
+const scoreEl= document.querySelector('#score')
 const startGameButton = document.querySelector('#startGameButton')
 const modelEl = document.querySelector('#modelEl')
 const modelScoreEl = document.querySelector('#modelScore')
@@ -105,13 +105,23 @@ class Particle {
 
 const x = canvas.width / 2
 const y = canvas.height / 2
-const player = new Player(x,y,10,'white')
+let player = new Player(x,y,10,'white')
 
 
 
-const projectiles = []
-const enemies = []
-const particles = []
+let projectiles = []
+let enemies = []
+let particles = []
+
+function init(){
+    player = new Player(x,y,10,'white')
+    projectiles = []
+    enemies = []
+    particles = []
+    score = 0
+    scoreEl.innerHTML = score
+    modelScoreEl.innerHTML = score
+}
 
 function spawnEnemies(){
     setInterval(() => {
@@ -188,7 +198,7 @@ function animate(){
                 if(enemy.radius > 15){ //shrink enemy
                     //if we shrink the enemy - increse score (100 points)
                     score += 100
-                    scoreElement.innerHTML = score
+                    scoreEl.innerHTML = score
                     gsap.to(enemy, { //nice shrinking effect with gsap
                         radius: enemy.radius - 10
                     })
@@ -198,7 +208,7 @@ function animate(){
                     },0)
                 }else{//kill enemy
                     score += 250
-                    scoreElement.innerHTML = score
+                    scoreEl.innerHTML = score
                     setTimeout(()=>{
                         enemies.splice(enemyIndex,1) //clear the enemy
                         projectiles.splice(projectileIndex, 1) //clear the projectile
@@ -220,6 +230,7 @@ addEventListener('click', (event)=>{
 
 
 startGameButton.addEventListener('click', ()=>{
+    init()
     animate()
     spawnEnemies()
     modelEl.style.display = 'none'
