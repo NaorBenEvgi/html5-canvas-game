@@ -1,6 +1,5 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-
 canvas.width = innerWidth
 canvas.height = innerHeight
 
@@ -129,11 +128,21 @@ function animate(){
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y) //distance between 2 points
             if (dist - enemy.radius - projectile.radius < 1){
-                //objects touch
-                setTimeout(()=>{
-                    enemies.splice(enemyIndex,1) //clear the enemy
-                    projectiles.splice(projectileIndex, 1) //clear the projectile
-                },0)
+                //when prokectiles touch enemy
+                if(enemy.radius > 15){
+                    gsap.to(enemy, { //nice shrinking effect with gsap
+                        radius: enemy.radius - 10
+                    })
+                    // enemy.radius -= 10
+                    setTimeout(()=>{
+                        projectiles.splice(projectileIndex, 1) //clear the projectile
+                    },0)
+                }else{
+                    setTimeout(()=>{
+                        enemies.splice(enemyIndex,1) //clear the enemy
+                        projectiles.splice(projectileIndex, 1) //clear the projectile
+                    },0)
+                }
             }
         })
     })
