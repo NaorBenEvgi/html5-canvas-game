@@ -5,7 +5,8 @@ canvas.width = innerWidth
 canvas.height = innerHeight
 
 const scoreElement= document.querySelector('#score')
-
+const startGameButton = document.querySelector('#startGameButton')
+const modelEl = document.querySelector('#modelEl')
 class Player{
     constructor(x,y,radius,color){
         this.x = x
@@ -203,7 +204,7 @@ function animate(){
     })
 }
 
-window.addEventListener('click', (event)=>{
+addEventListener('click', (event)=>{
     const angle = Math.atan2(event.clientY - canvas.height/2, event.clientX - canvas.width/2)
     const velocity = {
         x: Math.cos(angle) * 5,
@@ -212,5 +213,9 @@ window.addEventListener('click', (event)=>{
     projectiles.push(new Projectile(canvas.width / 2, canvas.height / 2, 5, 'white',velocity))
 })
 
-animate()
-spawnEnemies()
+
+startGameButton.addEventListener('click', ()=>{
+    animate()
+    spawnEnemies()
+    modelEl.style.display = 'none'
+})
