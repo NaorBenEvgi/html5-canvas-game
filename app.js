@@ -66,6 +66,37 @@ class Enemy {
     }
 }
 
+const friction = 0.98
+class Particle {
+    constructor(x,y,radius,color,velocity){
+        this.x = x
+        this.y = y
+        this.radius = radius
+        this.color = color
+        this.velocity = velocity
+        this.alpha = 1 //opacity value, the particle fade out over time
+    }
+
+    draw(){
+        ctx.save() 
+        ctx.globalAlpha = this.alpha
+        ctx.beginPath(); //specify we want to draw on the screen
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, false)
+        ctx.fillStyle = this.color
+        ctx.fill() 
+        ctx.restore()
+    }
+    
+    update(){
+        this.draw()
+        this.velocity.x *= friction //shrinking the x and y velocities over time by multipying velocities by itself time friction
+        this.velocity.y *= friction 
+        this.x = this.x + this.velocity.x
+        this.y = this.y + this.velocity.y
+        this.alpha -= 0.01
+    }
+}
+
 const x = canvas.width / 2
 const y = canvas.height / 2
 const player = new Player(x,y,10,'white')
@@ -74,6 +105,7 @@ const player = new Player(x,y,10,'white')
 
 const projectiles = []
 const enemies = []
+const particles = []
 
 function spawnEnemies(){
     setInterval(() => {
@@ -106,6 +138,15 @@ function animate(){
     ctx.fillStyle = 'rgba(0,0,0,0.1)'
     ctx.fillRect(0, 0, canvas.width, canvas.height); //clear html5 canvas
     player.draw()
+    particles.forEach((particle, index) => {
+        particle.update() //render the particles
+        if(particle.alpha <= 0){ //the particle fade out
+            //remove it from the screen
+            particles.splice(index,1)
+        }else{
+            particle.update()
+        }
+    })
     projectiles.forEach((projectile, projectileIndex) => {
         projectile.update()
         //remove projectiles from edges of screen
@@ -128,6 +169,11 @@ function animate(){
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y) //distance between 2 points
             if (dist - enemy.radius - projectile.radius < 1){
+                //create explosions (8 particles whenever a projectile touches an enemy)
+                for (let index = 0; index < enemy.radius*2; index++) {
+                    particles.push(new Particle(projectile.x, projectile.y, Math.random()*2, enemy.color, {x: (Math.random()-0.5)*(5), y:(Math.random()-0.5)*(5)}))
+                    
+                }
                 //when prokectiles touch enemy
                 if(enemy.radius > 15){
                     gsap.to(enemy, { //nice shrinking effect with gsap
