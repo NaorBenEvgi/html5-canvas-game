@@ -1,7 +1,10 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
+
 canvas.width = innerWidth
 canvas.height = innerHeight
+
+const scoreElement= document.querySelector('#score')
 
 class Player{
     constructor(x,y,radius,color){
@@ -133,6 +136,7 @@ function spawnEnemies(){
 }
 
 let animationId
+let score = 0
 function animate(){
     animationId = requestAnimationFrame(animate) //returns what frame are you currently on
     ctx.fillStyle = 'rgba(0,0,0,0.1)'
@@ -175,7 +179,10 @@ function animate(){
                     
                 }
                 //when prokectiles touch enemy
-                if(enemy.radius > 15){
+                if(enemy.radius > 15){ //shrink enemy
+                    //if we shrink the enemy - increse score (100 points)
+                    score += 100
+                    scoreElement.innerHTML = score
                     gsap.to(enemy, { //nice shrinking effect with gsap
                         radius: enemy.radius - 10
                     })
@@ -183,7 +190,9 @@ function animate(){
                     setTimeout(()=>{
                         projectiles.splice(projectileIndex, 1) //clear the projectile
                     },0)
-                }else{
+                }else{//kill enemy
+                    score += 250
+                    scoreElement.innerHTML = score
                     setTimeout(()=>{
                         enemies.splice(enemyIndex,1) //clear the enemy
                         projectiles.splice(projectileIndex, 1) //clear the projectile
