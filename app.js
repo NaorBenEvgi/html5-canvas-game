@@ -7,6 +7,8 @@ canvas.height = innerHeight
 const scoreElement= document.querySelector('#score')
 const startGameButton = document.querySelector('#startGameButton')
 const modelEl = document.querySelector('#modelEl')
+const modelScoreEl = document.querySelector('#modelScore')
+
 class Player{
     constructor(x,y,radius,color){
         this.x = x
@@ -168,7 +170,10 @@ function animate(){
         //enemy touch player
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y) //compute distance between enemy and player
         if (dist - enemy.radius - player.radius < 1){
+            //end game
             cancelAnimationFrame(animationId)
+            modelEl.style.display = 'flex'
+            modelScoreEl.innerHTML = score
         }
         //check if the projectile touched an enemy - for each enemy within the loop we want to test the distance between each projectile
         projectiles.forEach((projectile, projectileIndex) => {
