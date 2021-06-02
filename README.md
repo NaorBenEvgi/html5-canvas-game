@@ -6,7 +6,7 @@ In this game you must fend off an assortment of different enemies for as long as
 To start playing the game in Demo version click [HERE](https://naorbenevgi.github.io/html5-canvas-game/)
 
 ### How to play?
-Point and click to shoot. Grab power ups as needed to better your score (hold to shoot machine gun style).
+Point and click to shoot. Grab power ups as needed to better your score (hold to shoot machine gun style). 
 
 ## Screenshots
 ![Game](https://github.com/NaorBenEvgi/html5-canvas-game/blob/master/screenshot.png)
